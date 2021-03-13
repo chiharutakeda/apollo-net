@@ -11,19 +11,22 @@ import { colors, unit } from '../styles';
 import * as LoginTypes from '../pages/__generated__/login';
 
 interface LoginFormProps {
-  login: (a: { variables: LoginTypes.loginVariables }) => void;
+  login: (a: { variables: LoginTypes.LoginVariables }) => void;
 }
 
 interface LoginFormState {
   email: string;
 }
 
-export default class LoginForm extends Component<LoginFormProps, LoginFormState> {
+export default class LoginForm extends Component<
+  LoginFormProps,
+  LoginFormState
+> {
   state = { email: '' };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const email = (event.target as HTMLInputElement).value;
-    this.setState(s => ({ email }));
+    this.setState((s) => ({ email }));
   };
 
   onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
