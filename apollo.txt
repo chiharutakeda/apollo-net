@@ -1,53 +1,48 @@
-Graph API は schema を中心につくられています。schema は設計図で graph API で使用されるデータの型と関係性を示す
+Graph API は schema を中心に作られる。schema は設計図で graph API で使用されるデータの型と関係性を示す
 
-schema は query を用いて取得できるデータがどのようなものかmutation を用いて更新できるデータがどのようなものか定義している
+schema は 「query」 を用いて取得できるデータがどのようなものか,
+また「mutation」 を用いて更新できるデータがどのようなものか定義している
 
-Schema は使用するクライアント側の必要性に基づいて設計を行う。クライアントとサービスの間に存在しフロントエンドとバックエンドが協業する際の中間地点として機能します。
-
-chema First Development というチーム開発手法をお勧め。API の開発より先に schema 合議を取る手法。
-
-
-Query type から定義する　これは schema にどのような入り口かを示す
-
-Mutation type は、データを変更するための graph の入り口を示します。
-
-GraphQL mutation が返す値の type はどのように定義してもいいが、おすすめは特別な type を定義することで、適切な値がクライアントに返る。
+schema は使用する「クライアント側」の必要性に基づいて設計を行う。
+chema First Development というチーム開発手法をお勧め。API の開発より先に 「schema 」を決定する。
 
 
+「Query type 」は データ取得の型を示す
+「Mutation type 」は、データを変更するための型を示す。
 
-REST API値をフェッチするメソッドとビジネスロジックを分離する方法を推奨
 
+GraphQL mutation が返す値の型を定義することで適切な値をクライアント側で使用できる。
+
+
+REST API値をフェッチするメソッドとビジネスロジックを分離する方法を推奨する。
 API からのフェッチと整形のメソッドに分けると、整形する値の形式が変更された場合にもフェッチのメソッドが破壊されない
 
 
-Resolvers は GraphQL の operation（query や mutation ）がどのような処理を行なってデータを返すのかという指示書
+「Resolvers 」は GraphQL の operation（query や mutation ）がどのような処理を行なってデータを返すのかという指示書である。
+schema で定義した型の値を返すか、その型の値の promise を返す。
+「schema」 は、Graph API に対してどのような処理、型の値が返ってくるかという設計図
 
-Resolver は schema で定義した型の値を返すか、その型の値の promise をかえす。
 
-schema は、Graph API に対してどのような処理、型の値が返ってくるかという設計図
 
-実際の値を取得したりという指示は、Resolver に記述
+「schema 」で全体の構造を設計し、対応する「 resolver」 で値を取得したり加工する
 
-schema で全体の構造を設計し、対応する resolver で値を取得したり加工する役割
 
 ApolloServer に データソース（context）をわたすことによって、resolver の context 引数を通してアクセスすることが可能。
 
-Resolver を書く際、schema に書いた type や field と一致するキーの場所に resolver を作成する。
-
+「Resolver」 を書く際、「schema」 に書いた type や field と一致するキーの場所に resolver を作成する。
 どのフィールドがどこにあるのかわからなくなったら graph API schema を見直す
 
 top-level resolver（Query, Mutationのこと）の parent は常に空。graph のルートに当たるため親が存在しない。
 
 第二引数の arguments には query に渡した引数が渡されます。
-第三引数は context を受け取り、これを分解してデータソースを参照し、resolver からデータソースにアクセスする。
+第三引数は context（データソース） を受け取り、resolver からデータソースにアクセスする。
 
-resolver は data sources にロジックを閉じ込め resolver はロジックを書かないのがベストプラクティスであり、リファクタをする際に API を壊す危険性がなくなる
+リファクタをする際に API を壊す危険性がなくなるのでresolver は （データソース） にロジックを閉じ込め 「resolver はロジックを書かないのがベストプラクティス」である。
 
 query を書く場合には、operation keyword(query とか mutation) とその名前もつける。
+query は Query type の{} の内部が body であり、内部で 「selection set」 を定義します。「selection set」 とは query のレスポンスとしてどの field が欲しいのか示す。
 
-query は Query type の{} の内部が body であり、内部で selection set を定義します。selection set とは query のレスポンスとしてどの field が欲しいのか示す。
-
-スキーマ内で """ となっている部分でコメントを追加することで  docs から type をみた際に、追加の情報として表示される
+スキーマ内で """ となっている部分でコメントを追加することで  docs から type をみた際に、「追加の情報」として表示される
 
 全ての type に対して resolver を書いてはいない。resolver が書かれていない場合には default resolver が動作し、親オブジェクトが必要なプロパティを持っていれば default resolver によってオブジェクトが展開される。
 
@@ -56,29 +51,28 @@ args: この field に対して渡された引数。
 context: GraphQL operation の resolver 全体で共有されるオブジェクト。
 info: 実行したオペレーションに関する状態等の詳細情報。通常は用いられない。
 
-My-Graph-2-m4w1cd:GfTix0bxi3t8TZAPAORl7g
+
 Apollo Graph Manager は schema 保存場所の役割も持ち直近の schema を取得することができます。
 
 
 
-Apollo Client はいかなるクライアントライブラリでも使用可能な、データ管理に関する完全なソリューションになります。 
-Apollo Client は view 層については何も知りません。
+Apollo Client はいかなるクライアントライブラリでも使用可能なデータ管理機能を持つ。 
 
-apollo-client: 賢いキャッシュの仕組みをもつ、データ管理に関する完全なソリューションです。
+apollo-client: 賢いキャッシュの仕組みをもちデータ管理できる
 react-apollo: React向けに Query や Mutation といったコンポーネントをエクスポートする、view 層との統合を実現する。
 Apollo VSCode はレジストリからあなたのスキーマを取得する際にその API キーを使用します。
 
 loading や networkStatus といった値が見える。 Apollo Client がクエリのローディング状態を追跡している。
 
- hooks を用いて、Apollo Client を React アプリケーション に接続すると GraphQL の操作を UI に結びつけることを簡単にする
+ hooks を用いて、Apollo Client を React アプリケーション に接続すると GraphQL の操作を UI に結びつけることができる
 
  @apollo/react-hooks パッケージからエクスポートされた、 ApolloProvider コンポーネントでアプリケーションをラップして、 client というpropにクライアントを渡します。
  ApolloProvider コンポーネントは、 React の context provider に似ている。
 
-Apollo Client では graph API からデータをフェッチできます。Apollo Client は賢い仕組みでローディング状態やエラー状態も追跡する
+Apollo Client では graph API からデータをフェッチでき、ローディング状態やエラー状態も追跡する
 
 useQuery は Apollo の中で重要な構成要素  GraphQL クエリをフェッチし、そのデータをもとに UI を描画できるような結果を返す
 
-クエリを useQuery フックに渡す必要があり、loading error data の状態に応じて、 ローディングインジケータ、エラーメッセージ、もしくは正常な描画します。
+クエリを useQuery フックに渡す必要があり、loading error data の状態に応じて、 ローディングインジケータ、エラーメッセージ、正常な描画をすることができる。
 
 フラグメントの type は、スキーマに含まれる type と対応していなければいけない。
